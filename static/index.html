@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корпоративная база знаний</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <h1 data-i18n="app_title">База знаний</h1>
+                    <button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Скрыть панель">
+                        ◀
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Поиск в сайдбаре -->
+            <div class="sidebar-search">
+                <input type="text" class="search-box" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="Поиск...">
+            </div>
+            
+            <!-- Результаты поиска -->
+            <div class="search-results" id="searchResults">
+                <div class="search-results-info" id="resultsInfo"></div>
+                <div class="search-results-list" id="searchResultsList"></div>
+            </div>
+            
+            <!-- Кнопка новой статьи -->
+            <div class="sidebar-footer">
+                <button class="new-article-btn" onclick="openNewPageModal()" data-i18n="new_article">+ Новая статья</button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <div class="top-bar">
+                <button class="sidebar-open-btn" id="sidebarOpenBtn" onclick="toggleSidebar()" title="Показать панель">
+                    ☰
+                </button>
+                <div style="flex: 1;"></div>
+                <div class="settings-menu">
+                    <button class="settings-btn" onclick="toggleSettings()" title="Настройки">
+                        ⚙️
+                    </button>
+                    <div class="settings-dropdown" id="settingsDropdown">
+                        <div class="settings-item">
+                            <label data-i18n="theme">Тема</label>
+                            <div class="theme-toggle">
+                                <button data-theme="light" onclick="setTheme('light')" class="active">☀️</button>
+                                <button data-theme="dark" onclick="setTheme('dark')">🌙</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pages-grid" id="pagesGrid"></div>
+        </main>
+    </div>
+    
+    <!-- View Modal -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeViewModal()">×</button>
+            <div id="viewContent"></div>
+        </div>
+    </div>
+    
+    <!-- New Page Modal -->
+    <div class="modal" id="newPageModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeNewPageModal()">×</button>
+            <h2 data-i18n="new_article">Новая статья</h2>
+            <form id="newPageForm" onsubmit="createPage(event)">
+                <div class="form-group">
+                    <label data-i18n="title">Заголовок</label>
+                    <input type="text" id="pageTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="content">Содержание</label>
+                    <textarea id="pageContent" rows="10" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="tags">Теги (через запятую)</label>
+                    <input type="text" id="pageTags" placeholder="например: backend, api">
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="author">Ваше имя</label>
+                    <input type="text" id="pageAuthor" required>
+                </div>
+                
+                <button type="submit" class="btn-primary" data-i18n="save">Сохранить</button>
+                <button type="button" class="btn-secondary" onclick="closeNewPageModal()" data-i18n="cancel" style="margin-left: 8px;">Отмена</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeEditModal()">×</button>
+            <h2 data-i18n="edit">Редактировать статью</h2>
+            <form id="editPageForm" onsubmit="updatePage(event)">
+                <div class="form-group">
+                    <label data-i18n="title">Заголовок</label>
+                    <input type="text" id="editPageTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="content">Содержание</label>
+                    <textarea id="editPageContent" rows="10" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="tags">Теги (через запятую)</label>
+                    <input type="text" id="editPageTags" placeholder="например: backend, api">
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="author">Ваше имя</label>
+                    <input type="text" id="editPageAuthor" required>
+                </div>
+                
+                <button type="submit" class="btn-primary" data-i18n="save">Сохранить</button>
+                <button type="button" class="btn-secondary" onclick="closeEditModal()" data-i18n="cancel" style="margin-left: 8px;">Отмена</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="/script.js"></script>
+</body>
+</html>
