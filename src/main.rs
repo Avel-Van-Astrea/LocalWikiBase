@@ -11,8 +11,14 @@ async fn main() -> std::io::Result<()> {
     let state = Arc::new(wiki::AppState { db: pool });
     let i18n = Arc::new(i18n::I18n::new());
     
-    println!("Корпоративная база знаний");
-    println!("http://localhost:8080");
+    println!("📚 Корпоративная база знаний");
+    println!("🌐 Локальный доступ: http://localhost:8080");
+    
+    // Получаем IP адрес компьютера в сети
+    if let Ok(ip) = get_local_ip() {
+        println!("📡 Доступ в сети: http://{}:8080", ip);
+    }
+    
     println!("Нажмите Ctrl+C для остановки");
     
     HttpServer::new(move || {
@@ -47,7 +53,7 @@ async fn main() -> std::io::Result<()> {
                 HttpResponse::Ok().body("OK")
             }))
     })
-    .bind("127.0.0.1:8080")?
+    .bind("0.0.0.0:8080")?  // <- Меняем на 0.0.0.0
     .run()
     .await
 }
@@ -71,4 +77,15 @@ async fn get_translations(
     }
     
     HttpResponse::Ok().json(result)
+}
+
+// Функция для получения IP адреса в локальной сети
+fn get_local_ip() -> Result<String, String> {
+    use std::net::UdpSocket;
+    
+    // Подключаемся к публичному DNS для получения локального IP
+    let socket = UdpSocket::bind("0.0.0.0:0").map_err(|e| e.to_string())?;
+    socket.connect("8.8.8.8:80").map_err(|e| e.to_string())?;
+    let ip = socket.local_addr().map_err(|e| e.to_string())?.ip().to_string();
+    Ok(ip)
 }
