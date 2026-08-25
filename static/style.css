@@ -51,7 +51,6 @@ body {
     min-height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
     width: var(--sidebar-width);
     background: var(--bg-secondary);
@@ -103,7 +102,6 @@ body {
     background: var(--bg-hover);
 }
 
-/* Поиск */
 .sidebar-search {
     margin-bottom: 12px;
     flex-shrink: 0;
@@ -125,7 +123,6 @@ body {
     border-color: var(--accent-color);
 }
 
-/* Результаты поиска */
 .search-results {
     flex: 1;
     overflow-y: auto;
@@ -189,7 +186,6 @@ body {
     white-space: nowrap;
 }
 
-/* Sidebar footer */
 .sidebar-footer {
     padding-top: 12px;
     border-top: 1px solid var(--border-color);
@@ -212,7 +208,6 @@ body {
     background: var(--accent-hover);
 }
 
-/* Sidebar open button */
 .sidebar-open-btn {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
@@ -233,7 +228,6 @@ body {
     display: none;
 }
 
-/* Main Content */
 .main-content {
     margin-left: var(--sidebar-width);
     flex: 1;
@@ -253,7 +247,6 @@ body {
     gap: 20px;
 }
 
-/* Settings Menu */
 .settings-menu {
     position: relative;
 }
@@ -327,7 +320,6 @@ body {
     background: var(--accent-color);
 }
 
-/* Pages Grid */
 .pages-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -393,7 +385,6 @@ body {
     font-weight: 600;
 }
 
-/* Language badges */
 .lang-badge {
     display: inline-block;
     padding: 2px 8px;
@@ -414,7 +405,6 @@ body {
     color: white;
 }
 
-/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -482,7 +472,6 @@ body {
     overflow-x: auto;
 }
 
-/* Form */
 .form-group {
     margin-bottom: 16px;
 }
@@ -549,7 +538,6 @@ body {
     background: var(--border-color);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .sidebar {
         width: 300px;

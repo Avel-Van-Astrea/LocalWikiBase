@@ -67,7 +67,6 @@ pub async fn init_db() -> Result<SqlitePool, sqlx::Error> {
     .execute(&pool)
     .await?;
     
-    // Проверяем колонку lang
     let columns: Vec<(String,)> = sqlx::query_as(
         "SELECT name FROM pragma_table_info('pages') WHERE name = 'lang'"
     )

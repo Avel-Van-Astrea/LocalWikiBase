@@ -14,3 +14,4 @@ fuzzy-matcher = "0.3"
 chrono = "0.4"
 sqlx = { version = "0.7", features = ["runtime-tokio-native-tls", "sqlite", "chrono"] }
 regex = "1.10"
+gethostname = "0.4"

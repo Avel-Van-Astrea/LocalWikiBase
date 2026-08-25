@@ -1,32 +1,7 @@
 let currentTheme = localStorage.getItem('wiki-theme') || 'light';
 let allPages = [];
-let translations = {};
 let editingPageId = null;
 let sidebarOpen = true;
-
-async function loadTranslations() {
-    const res = await fetch('/api/i18n');
-    translations = await res.json();
-    updateUI();
-}
-
-function updateUI() {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[key]) {
-            el.textContent = translations[key];
-        }
-    });
-    
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-i18n-placeholder');
-        if (translations[key]) {
-            el.placeholder = translations[key];
-        }
-    });
-    
-    document.title = translations.app_title || 'Корпоративная база знаний';
-}
 
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
@@ -51,7 +26,6 @@ function toggleSettings() {
     dropdown.classList.toggle('open');
 }
 
-// Закрываем меню настроек при клике вне его
 document.addEventListener('click', function(e) {
     const menu = document.querySelector('.settings-menu');
     if (menu && !menu.contains(e.target)) {
@@ -75,9 +49,9 @@ async function loadPages() {
 function updateResultsInfo(count, total) {
     const info = document.getElementById('resultsInfo');
     if (count === total) {
-        info.textContent = `${translations.all_articles || 'Все статьи'}: ${count}`;
+        info.textContent = `Все статьи: ${count}`;
     } else {
-        info.textContent = `${translations.search_results || 'Найдено'}: ${count} ${translations.of || 'из'} ${total}`;
+        info.textContent = `Найдено: ${count} из ${total}`;
     }
 }
 
@@ -86,7 +60,7 @@ function renderPages(pages) {
     
     if (!pages || pages.length === 0) {
         grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-secondary);">
-            <p style="font-size: 18px;">${translations.no_pages || 'Статей пока нет. Создайте первую!'}</p>
+            <p style="font-size: 18px;">Статей пока нет. Создайте первую!</p>
         </div>`;
         return;
     }
@@ -98,7 +72,7 @@ function renderPages(pages) {
         return `
         <div class="page-card ${page.pinned ? 'pinned' : ''}" onclick="viewPage(${page.id})">
             <div class="page-title">
-                ${page.pinned ? `<span class="pinned-badge">${translations.pinned || 'Закреплено'}</span> ` : ''}
+                ${page.pinned ? `<span class="pinned-badge">Закреплено</span> ` : ''}
                 ${page.title}
                 <span class="lang-badge ${langClass}">${langLabel}</span>
             </div>
@@ -106,26 +80,24 @@ function renderPages(pages) {
                 ${page.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
             </div>
             <div class="page-meta">
-                ${translations.by || 'от'} ${page.author} • ${new Date(page.updated_at).toLocaleDateString('ru-RU')}
+                от ${page.author} • ${new Date(page.updated_at).toLocaleDateString('ru-RU')}
             </div>
         </div>
     `}).join('');
 }
 
-// Отображение результатов поиска в сайдбаре
 function renderSearchResults(results) {
     const list = document.getElementById('searchResultsList');
     
     if (!results || results.length === 0) {
         list.innerHTML = `<div style="padding: 12px; color: var(--text-secondary); text-align: center; font-size: 14px;">
-            ${translations.no_pages || 'Ничего не найдено'}
+            Ничего не найдено
         </div>`;
         return;
     }
     
     list.innerHTML = results.map(page => {
         const langLabel = page.lang === 'ru' ? 'RU' : 'EN';
-        // Создаём сниппет
         const snippet = page.content.length > 100 ? page.content.substring(0, 100) + '...' : page.content;
         
         return `
@@ -157,20 +129,20 @@ async function viewPage(id) {
                     <button onclick="openEditPage(${page.id})" 
                             style="padding: 4px 12px; background: var(--accent-color); color: white; 
                                    border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">
-                        ✏️ ${translations.edit || 'Редактировать'}
+                        ✏️ Редактировать
                     </button>
                     <button onclick="togglePinned(${page.id}, ${!page.pinned})" 
                             style="padding: 4px 12px; background: ${page.pinned ? 'var(--pinned-color)' : 'var(--bg-hover)'}; 
                                    color: ${page.pinned ? 'white' : 'var(--text-primary)'}; 
                                    border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 12px;">
-                        ${page.pinned ? '📌 ' + (translations.unpin || 'Открепить') : '📍 ' + (translations.pin || 'Закрепить')}
+                        ${page.pinned ? '📌 Открепить' : '📍 Закрепить'}
                     </button>
                 </div>
             </div>
             <div style="color: var(--text-secondary); margin: 10px 0;">
-                ${translations.by || 'от'} ${page.author} • ${translations.created || 'Создано'}: ${new Date(page.created_at).toLocaleDateString('ru-RU')}
-                • ${translations.updated || 'Обновлено'}: ${new Date(page.updated_at).toLocaleDateString('ru-RU')}
-                ${page.pinned ? ` • ${translations.pinned || 'Закреплено'}` : ''}
+                от ${page.author} • Создано: ${new Date(page.created_at).toLocaleDateString('ru-RU')}
+                • Обновлено: ${new Date(page.updated_at).toLocaleDateString('ru-RU')}
+                ${page.pinned ? ` • Закреплено` : ''}
             </div>
             <div class="page-tags">
                 ${page.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
@@ -293,14 +265,12 @@ async function createPage(e) {
     }
 }
 
-// Поиск в сайдбаре с отображением результатов
 document.getElementById('searchInput')?.addEventListener('input', function() {
     const q = this.value.trim().toLowerCase();
     const searchResultsList = document.getElementById('searchResultsList');
     const resultsInfo = document.getElementById('resultsInfo');
     
     if (q.length < 1) {
-        // Показываем все статьи
         renderSearchResults(allPages);
         updateResultsInfo(allPages.length, allPages.length);
         return;
@@ -315,7 +285,7 @@ document.getElementById('searchInput')?.addEventListener('input', function() {
     });
     
     renderSearchResults(results);
-    resultsInfo.textContent = `${translations.search_results || 'Найдено'}: ${results.length} ${translations.of || 'из'} ${allPages.length}`;
+    resultsInfo.textContent = `Найдено: ${results.length} из ${allPages.length}`;
 });
 
 function setTheme(theme) {
@@ -359,9 +329,7 @@ document.getElementById('editModal')?.addEventListener('click', function(e) {
 
 async function init() {
     setTheme(currentTheme);
-    await loadTranslations();
     await loadPages();
-    // Показываем все статьи в результатах поиска по умолчанию
     renderSearchResults(allPages);
 }
 
